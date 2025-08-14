@@ -38,6 +38,8 @@ def dashboard_view(request):
         if form.is_valid():
             amount = form.cleaned_data['amount']
             currency = form.cleaned_data['currency']
+            receiver_name = form.cleaned_data['receiver_name']
+            receiver_email = form.cleaned_data['receiver_email']
             fx_rates = {'GBP':Decimal(0.78), 'ZAR':Decimal(18.2)}
             fees = {'GBP':Decimal(0.10), 'ZAR':Decimal(0.20)}
             fee = amount * fees[currency]
@@ -46,12 +48,17 @@ def dashboard_view(request):
             fx_rates = fx_rates[currency].quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             fee = fee.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             result = {
+                'receiver_name': receiver_name,
+                'receiver_email': receiver_email, 
                 'fee':fee,
                 'rate':fx_rates,
                 'final':final,
                 'currency':currency,
+                'timestamp': transaction.timestamp,
             }
             transaction = Transaction.objects.create(user=request.user,
+                                                     receiver_name = receiver_name,
+                                                     receiver_email = receiver_email,
                                                      amount_usd=amount,
                                                      currency=currency,
                                                      fee=fee,
