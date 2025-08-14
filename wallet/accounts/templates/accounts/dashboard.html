@@ -7,13 +7,30 @@
         <button type="submit">Send</button>
     </form>
     {% if result %}
-    <h3>Receipt</h3>
+    <!-- <h3>Receipt</h3>
     <p><strong>To:</strong> {{ result.receiver_name }}({{ result.receiver_email}})</p>
     <p><strong>Sent:</strong> {{ result.amount }} USD</p>
     <p><strong>Fee:</strong> ${{ result.fee }}</p>    
     <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
     <p><strong>Recieved Amount:</strong> {{ result.final }} {{ result.currency }}</p>
-    <p><strong>Time:</strong> {{ result.timestamp }}</p>
+    <p><strong>Time:</strong> {{ result.timestamp }}</p> -->
+    <script>
+        window.onload = function(){
+            document.getElementById('receiptModal').style.display = 'block';
+        };
+    </script>
+    <div id="receiptModal" style="display: none; position: fixed; top: 0; left:0; width: 100%; height: 100%; background-color: aquamarine;">
+        <div style="background: white; margin: 10% auto; padding: 20px; width: 400px; border-radius: 8px; position: relative;">
+            <span onclick="document.getElementById('receiptModal').style.display='none'" style="position:absolute; top:10px; right:15px; cursor: pointer;">&times;</span>
+            <h3>Receipt</h3>
+            <p><strong>To:</strong>{{ result.receiver_name }} ({{ result.receiver_email }})</p>
+            <p><strong>Sent:</strong>{{ result.amount }} USD</p>
+            <p><strong>Fee:</strong>{{ result.fee }} USD</p>
+            <p><strong>Exchange Rate:</strong>{{ result.rate }}</p>
+            <p><strong>Received:</strong>{{ result.final }} {{ result.currency}} USD</p>
+            <p><strong>Time:</strong>{{ result.timestamp|date:"Y-m-d H:i" }}</p>
+        </div>
+    </div>
     {% endif %}
 
      <h2>Recent Transactions</h2>
