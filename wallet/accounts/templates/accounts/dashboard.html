@@ -8,11 +8,35 @@
     </form>
     {% if result %}
     <h3>Receipt</h3>
-    <p><strong>To:</strong>{{ result.receiver_name }}({{ result.receiver_email}})</p>
-    <p><strong>Sent:</strong>{{ result.amount }} USD</p>
-    <p><strong>Fee:</strong>${{ result.fee }}</p>    
+    <p><strong>To:</strong> {{ result.receiver_name }}({{ result.receiver_email}})</p>
+    <p><strong>Sent:</strong> {{ result.amount }} USD</p>
+    <p><strong>Fee:</strong> ${{ result.fee }}</p>    
     <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
-    <p><strong>Recieved Amount:</strong> ({{ result.currency }}){{ result.final }}</p>
-    <p><strong>Time:</strong>{{ result.timestamp }}</p>
+    <p><strong>Recieved Amount:</strong> {{ result.final }} {{ result.currency }}</p>
+    <p><strong>Time:</strong> {{ result.timestamp }}</p>
     {% endif %}
+
+     <h2>Recent Transactions</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Receiver</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Fee</th>
+            <th>Received</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.timestamp|date:"Y-m-d H:i" }}</td>
+            <td>{{ t.receiver_name }}</td>
+            <td>{{ t.amount_usd }}</td>
+            <td>{{ t.currency }}</td>
+            <td>{{ t.fee }}</td>
+            <td>{{ t.final_amount }}</td>            
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No transactions yet</td></tr>
+        {% endfor %}
+    </table>
 </html>

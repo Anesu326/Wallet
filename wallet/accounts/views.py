@@ -33,6 +33,7 @@ def login_view(request):
 @login_required
 def dashboard_view(request):
     result = None
+    transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')[:5]
     if request.method == 'POST':
         form = SendMoneyForm(request.POST)
         if form.is_valid():
@@ -66,12 +67,12 @@ def dashboard_view(request):
                 'currency':currency,
                 'timestamp': transaction.timestamp,
             }
+            
         else:
-            form = SendMoneyForm()
-        return render(request, 'accounts/dashboard.html', {'form':form, 'result':result})
+            form = SendMoneyForm()        
+        return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'transactions':transactions})
 
 @login_required
-def transactions_view(request):
+def transaction_history_view(request):
     transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
-    return render(request, 'accounts/transactions.html',{'transactions':transactions})
-# Create your views here.
+    return render(request, 'accounts/history.html', {'transactions': transactions})
