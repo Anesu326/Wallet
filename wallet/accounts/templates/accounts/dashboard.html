@@ -9,7 +9,7 @@
     {% if result %}
     <h3>Receipt</h3>
     <p><strong>To:</strong>{{ result.receiver_name }}({{ result.receiver_email}})</p>
-    <p><strong>Sent:</strong>result.amount USD</p>
+    <p><strong>Sent:</strong>{{ result.amount }} USD</p>
     <p><strong>Fee:</strong>${{ result.fee }}</p>    
     <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
     <p><strong>Recieved Amount:</strong> ({{ result.currency }}){{ result.final }}</p>

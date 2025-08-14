@@ -47,15 +47,7 @@ def dashboard_view(request):
             final = final.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             fx_rates = fx_rates[currency].quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             fee = fee.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-            result = {
-                'receiver_name': receiver_name,
-                'receiver_email': receiver_email, 
-                'fee':fee,
-                'rate':fx_rates,
-                'final':final,
-                'currency':currency,
-                'timestamp': transaction.timestamp,
-            }
+            
             transaction = Transaction.objects.create(user=request.user,
                                                      receiver_name = receiver_name,
                                                      receiver_email = receiver_email,
@@ -64,6 +56,16 @@ def dashboard_view(request):
                                                      fee=fee,
                                                      final_amount=final,
                                                      fx_rate=fx_rates,)
+            result = {
+                'receiver_name': receiver_name,
+                'receiver_email': receiver_email,
+                'amount': amount,
+                'fee':fee,
+                'rate':fx_rates,
+                'final':final,
+                'currency':currency,
+                'timestamp': transaction.timestamp,
+            }
         else:
             form = SendMoneyForm()
         return render(request, 'accounts/dashboard.html', {'form':form, 'result':result})
