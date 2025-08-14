@@ -56,7 +56,7 @@ def dashboard_view(request):
                                                      currency=currency,
                                                      fee=fee,
                                                      final_amount=final,
-                                                     fx_rate=fx_rates[currency],)
+                                                     fx_rate=fx_rates,)
         else:
             form = SendMoneyForm()
         return render(request, 'accounts/dashboard.html', {'form':form, 'result':result})

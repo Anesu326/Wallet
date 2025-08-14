@@ -13,6 +13,7 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Email')
 
 class SendMoneyForm(forms.Form):
+    receiver_name = forms.CharField(max_length=100)
+    receiver_email = forms
     amount = forms.DecimalField(min_value=10, max_value=10000)
     currency = forms.ChoiceField(choices=[('GBP', 'GBP'), ('ZAR', 'ZAR')])
-    
