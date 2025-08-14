@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <h2>Send Money</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Calculate</button>
+    </form>
+    {% if result %}
+    <p>Fee: ${{ result.fee }}</p>
+    <p>Exchange Rate: {{ result.rate }}</p>
+    <p>Final Amount ({{ result.currency }}):{{ result.final }}</p>
+    {% endif %}
+</html>
