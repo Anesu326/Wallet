@@ -14,6 +14,6 @@ class LoginForm(AuthenticationForm):
 
 class SendMoneyForm(forms.Form):
     receiver_name = forms.CharField(max_length=100)
-    receiver_email = forms
+    receiver_email = forms.CharField()
     amount = forms.DecimalField(min_value=10, max_value=10000)
     currency = forms.ChoiceField(choices=[('GBP', 'GBP'), ('ZAR', 'ZAR')])
