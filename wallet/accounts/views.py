@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm, SendMoneyForm
-from .models import Profile
+from .models import Profile, Transaction
 from django.contrib.auth.models import User
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -51,8 +51,18 @@ def dashboard_view(request):
                 'final':final,
                 'currency':currency,
             }
+            transaction = Transaction.objects.create(user=request.user,
+                                                     amount_usd=amount,
+                                                     currency=currency,
+                                                     fee=fee,
+                                                     final_amount=final,
+                                                     fx_rate=fx_rates[currency],)
         else:
             form = SendMoneyForm()
         return render(request, 'accounts/dashboard.html', {'form':form, 'result':result})
 
+@login_required
+def transactions_view(request):
+    transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
+    return render(request, 'accounts/transactions.html',{'transactions':transactions})
 # Create your views here.
