@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <script>
-        let currentAd = 0;
-        const adInner = document.getElementById("addInner");
-        setInterval(() => {
-            currentAd = (currentAd + 1) % 2;
-            adInner.style.transform = `translateX(-${currentAd * 100}%)`;
-        }, 4000);
-
-        window.onload = function(){
-            document.getElementById('receiptModal').style.display = 'block';
-        };
-
-        function closeReceipt(){
-            document.getElementById("receiptModal").style.display = "none"
-            document.getElementById("sendForm").reset();
+    <head>
+        <title>Dashboard</title>
+        <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 30px;
         }
-    </script>
 
-    <h2>Send Money</h2>
+        .dashboard-grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .box{
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+        }
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        h2, h3{
+            margin-top:0;
+        }
+    </style>
+    </head>
+
+    <body>      
+    <h2>Welcome, {{ request.user.first_name|default:request.user.username }}</h2>
     <form method="post" id="sendForm">
         {% csrf_token %}
         {{ form.as_p }}
@@ -38,6 +51,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let currentAd = 0;
+        const adInner = document.getElementById("addInner");
+        setInterval(() => {
+            currentAd = (currentAd + 1) % 2;
+            adInner.style.transform = `translateX(-${currentAd * 100}%)`;
+        }, 4000);
+
+        window.onload = function(){
+            document.getElementById('receiptModal').style.display = 'block';
+        };
+
+        function closeReceipt(){
+            document.getElementById("receiptModal").style.display = "none"
+            document.getElementById("sendForm").reset();
+        }
+    </script>
 
     {% if result %}    
     <div id="receiptModal" style="display: none; position: fixed; top: 0; left:0; width: 100%; height: 100%; background-color: aquamarine;">
@@ -77,4 +108,5 @@
         <tr><td colspan="6">No transactions yet</td></tr>
         {% endfor %}
     </table>
+    </body>
 </html>
