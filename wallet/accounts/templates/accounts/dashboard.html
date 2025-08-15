@@ -1,178 +1,269 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Dashboard</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <style>
-        body{
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
+  <head>
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+      }
 
-        .dashboard-grid{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        .box{
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fdfdfd;
-        }
-        table{
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        h2, h3{
-            margin-top:0;
-        }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+      .box {
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fdfdfd;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      h2,
+      h3 {
+        margin-top: 0;
+      }
     </style>
-    </head>
+  </head>
 
-    <body class="bg-light">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="#">Pocket Money</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav ms-auto">
-                        {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                        {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    <div class="container py-4">     
-    <h2 class="mb-4">Welcome, {{ request.user.first_name|default:request.user.username }}</h2>
-
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card p-4 mb-4">
-            <h4>Send Money</h4>
-                <form method="post" id="sendForm">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-primary mt-2" type="submit">Send</button>
-                </form>
-            </div> 
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="#">Pocket Money</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-    
-
-    <div class="col-md-6">
-        <div class="card p-4 mb-4">
-        <h4>Recent Transactions</h4>
-        <table class="table table-striped table-sm small">
-        <thead>    
-        <tr>
-            <th>Date</th>
-            <th>Receiver</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Fee</th>
-            <th>Received</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        {% for t in page_obj %}
-        <tr>
-            <td>{{ t.timestamp|date:"Y-m-d H:i" }}</td>
-            <td>{{ t.receiver_name }}</td>
-            <td>{{ t.amount_usd }}</td>
-            <td>{{ t.currency }}</td>
-            <td>{{ t.fee }}</td>
-            <td>{{ t.final_amount }} {{  t.currency }}</td>            
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">No transactions yet</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination pagination-sm">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number}}">Previous</a></li>
-            {% endif %}
-            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages}}</span></li>
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number}}">Next</a></li>
-            {% endif %}
-        </ul>
+      </div>
     </nav>
-    </div>
-    </div>
-    </div>
-    
-    <div class="box">
-        <!-- <h3>Sponsored Ads</h3> -->
-    <div id="adCarousel" style="width: 100%; max-width: 600px; overflow: hidden; border: 1px solid #ccc; border-radius: 8px; position: relative; margin-bottom: 20px;">
-        <div id="adInner" style="display: flex; width: 200%; transition: transform 0.5s ease;">
-            <div style="width:100%; flex-shrink:0; padding: 20px; background: #f9f9f9;">
-                <h4>Ad 1: Money Transfare Bonus</h4>
-                <p>Send 500+ and get 10 cashback instantly. Limited time offer!</p>
-            </div>
-            <div style="width:100%; flex-shrink:0; padding: 20px; background: #f0f0f0;">
-                <h4>Ad 2: Refer a Friend</h4>
-                <p>Earn rewards when your friends use this App to send money abroad.</p>
-            </div>
-        </div>
-    </div>
-    </div>
 
-    <script>
+    <div class="container py-4">
+      <h2 class="mb-4">
+        Welcome, {{ request.user.first_name|default:request.user.username }}
+      </h2>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card p-4 mb-4">
+            <h4>Send Money</h4>
+            <form method="post" id="sendForm">
+              {% csrf_token %} {{ form.as_p }}
+              <button class="btn btn-primary mt-2" type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card p-4 mb-4">
+            <h4>Recent Transactions</h4>
+            <table class="table table-striped table-sm small">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Receiver</th>
+                  <th>Amount</th>
+                  <th>Currency</th>
+                  <th>Fee</th>
+                  <th>Received</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for t in page_obj %}
+                <tr>
+                  <td>{{ t.timestamp|date:"Y-m-d H:i" }}</td>
+                  <td>{{ t.receiver_name }}</td>
+                  <td>{{ t.amount_usd }}</td>
+                  <td>{{ t.currency }}</td>
+                  <td>{{ t.fee }}</td>
+                  <td>{{ t.final_amount }} {{ t.currency }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4">No transactions yet</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <nav>
+              <ul class="pagination pagination-sm">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number}}"
+                    >Previous</a
+                  >
+                </li>
+                {% endif %}
+                <li class="page-item disabled">
+                  <span class="page-link"
+                    >Page {{ page_obj.number }} of {{
+                    page_obj.paginator.num_pages}}</span
+                  >
+                </li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number}}"
+                    >Next</a
+                  >
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <!-- <h3>Sponsored Ads</h3> -->
+        <div
+          id="adCarousel"
+          style="
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            id="adInner"
+            style="display: flex; width: 200%; transition: transform 0.5s ease"
+          >
+            <div
+              style="
+                width: 100%;
+                flex-shrink: 0;
+                padding: 20px;
+                background: #f9f9f9;
+              "
+            >
+              <h4>Ad 1: Money Transfare Bonus</h4>
+              <p>
+                Send 500+ and get 10 cashback instantly. Limited time offer!
+              </p>
+            </div>
+            <div
+              style="
+                width: 100%;
+                flex-shrink: 0;
+                padding: 20px;
+                background: #f0f0f0;
+              "
+            >
+              <h4>Ad 2: Refer a Friend</h4>
+              <p>
+                Earn rewards when your friends use this App to send money
+                abroad.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
         let currentAd = 0;
         const adInner = document.getElementById("addInner");
         setInterval(() => {
-            currentAd = (currentAd + 1) % 2;
-            adInner.style.transform = `translateX(-${currentAd * 100}%)`;
+          currentAd = (currentAd + 1) % 2;
+          adInner.style.transform = `translateX(-${currentAd * 100}%)`;
         }, 4000);
 
-        window.onload = function(){
-            document.getElementById('receiptModal').style.display = 'block';
+        window.onload = function () {
+          document.getElementById("receiptModal").style.display = "block";
         };
 
-        function closeReceipt(){
-            document.getElementById("receiptModal").style.display = "none"
-            document.querySelector(".modal-backdrop").remove();
-            document.getElementById("sendForm").reset();
+        function closeReceipt() {
+          document.getElementById("receiptModal").style.display = "none";
+          document.querySelector(".modal-backdrop").remove();
+          document.getElementById("sendForm").reset();
         }
-    </script>
+      </script>
 
-    {% if result %}    
-    <div class="modal fade show" id="receiptModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+      {% if result %}
+      <div
+        class="modal fade show"
+        id="receiptModal"
+        tabindex="-1"
+        style="display: block"
+        aria-modal="true"
+        role="dialog"
+      >
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Transaction Confirmation</h5>
-                    <button type="button" class="btn-close" onclick="closeReceipt()" aria-label="Close"></button>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Transaction Confirmation</h5>
+              <button
+                type="button"
+                class="btn-close"
+                onclick="closeReceipt()"
+                aria-label="Close"
+              ></button>
+            </div>
             <div class="modal-body">
-            <p><strong>To:</strong> {{ result.receiver_name }} ({{ result.receiver_email }})</p>
-            <p><strong>Sent:</strong> {{ result.amount }} USD</p>
-            <p><strong>Fee:</strong> {{ result.fee }} USD</p>
-            <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
-            <p><strong>Received:</strong> {{ result.final }} {{ result.currency}}</p>
-            <p><strong>Time:</strong> {{ result.timestamp|date:"Y-m-d H:i" }}</p>
+              <p>
+                <strong>To:</strong> {{ result.receiver_name }} ({{
+                result.receiver_email }})
+              </p>
+              <p><strong>Sent:</strong> {{ result.amount }} USD</p>
+              <p><strong>Fee:</strong> {{ result.fee }} USD</p>
+              <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
+              <p>
+                <strong>Received:</strong> {{ result.final }} {{
+                result.currency}}
+              </p>
+              <p>
+                <strong>Time:</strong> {{ result.timestamp|date:"Y-m-d H:i" }}
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="buttom"
+                class="btn btn-secondary"
+                onclick="closeReceipt()"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="modal-footer">
-            <button type="buttom" class="btn btn-secondary" onclick="closeReceipt()">Close</button>
-        </div>
-        </div>
-        </div>
+      </div>
+      <div class="modal-backdrop fade show"></div>
     </div>
-    <div class="modal-backdrop fade show"></div>
-    </div>        
     {% endif %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>       
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
