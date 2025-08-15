@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm, SendMoneyForm
 from .models import Profile, Transaction
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from decimal import Decimal, ROUND_HALF_UP
 
 def register_view(request):
@@ -33,7 +34,10 @@ def login_view(request):
 @login_required
 def dashboard_view(request):
     result = None
-    transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')[:5]
+    transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
+    paginator = Paginator(transactions, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     if request.method == 'POST':
         form = SendMoneyForm(request.POST)
         if form.is_valid():
@@ -72,7 +76,7 @@ def dashboard_view(request):
             
     else:
         form = SendMoneyForm()        
-    return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'transactions':transactions})
+    return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'page_obj':page_obj,})
 
 @login_required
 def transaction_history_view(request):
