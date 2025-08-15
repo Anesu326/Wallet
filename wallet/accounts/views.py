@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from decimal import Decimal, ROUND_HALF_UP
+from .utils import get_fx_rates
 
 def register_view(request):
     if request.method == 'POST':
@@ -41,6 +42,7 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
+    fx_rates = get_fx_rates()
     result = None
     transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
     paginator = Paginator(transactions, 5)
