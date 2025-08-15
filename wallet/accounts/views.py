@@ -67,10 +67,12 @@ def dashboard_view(request):
                 'currency':currency,
                 'timestamp': transaction.timestamp,
             }
-            
         else:
-            form = SendMoneyForm()        
-        return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'transactions':transactions})
+            result = None
+            
+    else:
+        form = SendMoneyForm()        
+    return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'transactions':transactions})
 
 @login_required
 def transaction_history_view(request):
