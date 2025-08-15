@@ -11,4 +11,7 @@ urlpatterns = [path('register/',
                      name='dashboard'),
                 path('history/',
                      views.transaction_history_view,
-                     name='transaction_history'),]
+                     name='transaction_history'),
+                path('logout/',
+                     views.logout_view,
+                     name='logout'),]
