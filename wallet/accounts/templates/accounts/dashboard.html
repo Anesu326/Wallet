@@ -32,13 +32,46 @@
 
     <body>      
     <h2>Welcome, {{ request.user.first_name|default:request.user.username }}</h2>
-    <form method="post" id="sendForm">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Send</button>
-    </form>
 
-    <h3>Sponsored Ads</h3>
+    <div class="dashboard-grid">
+        <div class="box">
+            <h3>Send Money</h3>
+                <form method="post" id="sendForm">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Send</button>
+                </form>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3>Recent Transactions</h3>
+        <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Receiver</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Fee</th>
+            <th>Received</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.timestamp|date:"Y-m-d H:i" }}</td>
+            <td>{{ t.receiver_name }}</td>
+            <td>{{ t.amount_usd }}</td>
+            <td>{{ t.currency }}</td>
+            <td>{{ t.fee }}</td>
+            <td>{{ t.final_amount }} {{  t.currency }}</td>            
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No transactions yet</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+    
+    <div class="box">
+        <h3>Sponsored Ads</h3>
     <div id="adCarousel" style="width: 100%; max-width: 600px; overflow: hidden; border: 1px solid #ccc; border-radius: 8px; position: relative; margin-bottom: 20px;">
         <div id="adInner" style="display: flex; width: 200%; transition: transform 0.5s ease;">
             <div style="width:100%; flex-shrink:0; padding: 20px; background: #f9f9f9;">
@@ -50,6 +83,7 @@
                 <p>Earn rewards when your friends use this App to send money abroad.</p>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
@@ -83,30 +117,6 @@
             <p><strong>Time:</strong>{{ result.timestamp|date:"Y-m-d H:i" }}</p>
         </div>
     </div>    
-    {% endif %}    
-
-     <h2>Recent Transactions</h2>
-    <table border="1">
-        <tr>
-            <th>Date</th>
-            <th>Receiver</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Fee</th>
-            <th>Received</th>
-        </tr>
-        {% for t in transactions %}
-        <tr>
-            <td>{{ t.timestamp|date:"Y-m-d H:i" }}</td>
-            <td>{{ t.receiver_name }}</td>
-            <td>{{ t.amount_usd }}</td>
-            <td>{{ t.currency }}</td>
-            <td>{{ t.fee }}</td>
-            <td>{{ t.final_amount }} {{  t.currency }}</td>            
-        </tr>
-        {% empty %}
-        <tr><td colspan="6">No transactions yet</td></tr>
-        {% endfor %}
-    </table>
+    {% endif %}       
     </body>
 </html>
