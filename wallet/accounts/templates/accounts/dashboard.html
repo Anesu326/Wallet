@@ -39,9 +39,9 @@
     </nav>
 
     <div class="container py-4">
-      <h2 class="mb-4">
+      <h3 class="mb-4">
         Welcome, {{ request.user.first_name|default:request.user.username }}
-      </h2>
+      </h3>
 
       <div class="row">
         <div class="col-md-6">
@@ -50,29 +50,31 @@
             <form method="post">
               {% csrf_token %}
               {{ form.non_field_erros }}
-              <div class="mb3">
+              
+              <div class="mb-3">
                 <label>Receiver Name</label>
                 {{ form.receiver_name }}
                 {{ form.receiver_name.errors }}
               </div>
-              <div class="mb3">
+              <div class="mb-3">
                 <label>Receiver Email</label>
                  {{ form.receiver_email }}
                  {{ form.receiver_email.errors }}
               </div>
-              <div class="mb3">
+              <div class="mb-3">
                 <label>Amount (USD)</label>
                 {{ form.amount }}
                 {{ form.amount.errors }}
               </div>
-              <div class="mb3">
+              <div class="mb-3">
                 <label>Currency</label>
                 {{ form.currency }}
                 {{ form.currency.errors }}
               </div>
-              <div class="mb3">
+              <div class="text-center mt-4">
                 <button type="button" class="btn btn-primary" onclick="openConfirmModal()">Send</button>
               </div>
+              
             <div class="modal fade" id="confirmModal" tabindex="-1">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -165,13 +167,16 @@
           <div id="adsCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="https://www.freepik.com/free-vector/gradient-horizontal-banner-template-cyber-monday-sale_70037298.htm#fromView=keyword&page=1&position=16&query=Advertising+Banner" alt="image" class="d-block w-100" />
+                <h5>Send Money Instantly</h5>
+                <p>Transfer funds across borders in seconds. Fast, Secure, and Affordable.</p>
               </div>
               <div class="carousel-item">
-                <img src="#" alt="image2" class="d-block w-100" />
+                <h5>Low Fees, High Trust</h5>
+                <p>Only 10% for Pound and 20% for Rand transfers.</p>
               </div>
               <div class="carousel-item">
-                <img src="#" alt="image3" class="d-block w-100" />
+                <h5>Pocket Money, Big Impact</h5>
+                <p>Empower your loved ones abroad - every dollar counts.</p>
               </div>
             </div>
             <button
