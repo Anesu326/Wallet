@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 
+# Registration form
 class RegisterForm(forms.ModelForm):
     name = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
@@ -9,9 +10,11 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['email', 'password']
 
+# Login form
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Email')
 
+# Send money form
 class SendMoneyForm(forms.Form):
     receiver_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
