@@ -86,10 +86,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                   </div>
                   <div class="modal-body">
-                    <p><Strong>Amount:</Strong><span id="confirmAmount"></span>USD</p>
-                    <p><Strong>Currency:</Strong><span id="confirmCurrency"></span></p>
-                    <p><Strong>Receiver:</Strong><span id="confirmReceiver"></span></p>
-                    <p><Strong>ReceiverEmail:</Strong><span id="confirmEmail"></span></p>                    
+                    <p><Strong>Amount:</Strong>&nbsp;<span id="confirmAmount"></span>USD</p>
+                    <p><Strong>Currency:</Strong>&nbsp;<span id="confirmCurrency"></span></p>
+                    <p><Strong>Receiver:</Strong>&nbsp;<span id="confirmReceiver"></span></p>
+                    <p><Strong>ReceiverEmail:</Strong>&nbsp;<span id="confirmEmail"></span></p>                    
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -98,6 +98,56 @@
                 </div>
               </div>
             </div>
+            {% if result %}
+      <!-- Transaction Receipt -->
+      <div
+        class="modal fade show"
+        id="receiptModal"
+        tabindex="-1"
+        style="display: block"
+        aria-modal="true"
+        role="dialog"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Transaction Receipt</h5>
+              <button
+                type="button"
+                class="btn-close"
+                onclick="closeReceipt()"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>
+                <strong>To:</strong> {{ result.receiver_name }} ({{ result.receiver_email }})
+              </p>
+              <p><strong>Sent:</strong> {{ result.amount }} USD</p>
+              <p><strong>Fee:</strong> {{ result.fee }} USD</p>
+              <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
+              <p>
+                <strong>Received:</strong> {{ result.final }} {{ result.currency}}
+              </p>
+              <p>
+                <strong>Time:</strong> {{ result.timestamp|date:"Y-m-d H:i" }}
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="buttom"
+                class="btn btn-secondary"
+                onclick="closeReceipt()"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop fade show"></div>
+    </div>
+    {% endif %}
             </form>
           </div>
         </div>
@@ -234,56 +284,7 @@
         }
       </script>
 
-      {% if result %}
-      <!-- Transaction Receipt -->
-      <div
-        class="modal fade show"
-        id="receiptModal"
-        tabindex="-1"
-        style="display: block"
-        aria-modal="true"
-        role="dialog"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Transaction Receipt</h5>
-              <button
-                type="button"
-                class="btn-close"
-                onclick="closeReceipt()"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <p>
-                <strong>To:</strong> {{ result.receiver_name }} ({{ result.receiver_email }})
-              </p>
-              <p><strong>Sent:</strong> {{ result.amount }} USD</p>
-              <p><strong>Fee:</strong> {{ result.fee }} USD</p>
-              <p><strong>Exchange Rate:</strong> {{ result.rate }}</p>
-              <p>
-                <strong>Received:</strong> {{ result.final }} {{ result.currency}}
-              </p>
-              <p>
-                <strong>Time:</strong> {{ result.timestamp|date:"Y-m-d H:i" }}
-              </p>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="buttom"
-                class="btn btn-secondary"
-                onclick="closeReceipt()"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-backdrop fade show"></div>
-    </div>
-    {% endif %}
+      
     {% if result %}
     <script>
       var receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
