@@ -1,5 +1,6 @@
 import requests
 
+# Request fx data and render to the exchange rate
 def get_fx_rates():
     url = 'https://68976304250b078c2041c7fc.mockapi.io/api/wiremit/InterviewAPIS'
     try:
