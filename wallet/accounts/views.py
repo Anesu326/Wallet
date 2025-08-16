@@ -9,6 +9,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from decimal import Decimal, ROUND_HALF_UP
 from .utils import get_fx_rates
+from django.utils import timezone
 
 def register_view(request):
     if request.method == 'POST':
@@ -42,6 +43,8 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=user).order_by('-timestamp')
     fx_rates = get_fx_rates()
     result = None
     transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
@@ -83,10 +86,28 @@ def dashboard_view(request):
             }
         else:
             result = None
+        context = {
+            'result':{
+                'amount': amount,
+                'fee': fee,
+                'final_amount': final,
+                'receiver_name': receiver_name,
+                'receiver_email': receiver_email,
+                'currency': currency,
+                'rate': fx_rates,
+                'timestamp': timezone.now(),
+            },
+            'page_obj': page_obj,
+            'transactions': transactions,
+        }
+        return render(request, 'accounts/dashboard.html', context)
+    return render(request, 'accounts/dashboard.html',{
+        'page_obj':page_obj        
+    })
             
-    else:
-        form = SendMoneyForm()        
-    return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'page_obj':page_obj,})
+    # else:
+                
+    # return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'page_obj':page_obj,})
 
 @login_required
 def transaction_history_view(request):

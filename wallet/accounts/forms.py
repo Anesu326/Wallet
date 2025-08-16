@@ -13,7 +13,20 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Email')
 
 class SendMoneyForm(forms.Form):
-    receiver_name = forms.CharField(max_length=100)
-    receiver_email = forms.CharField()
-    amount = forms.DecimalField(min_value=10, max_value=10000)
-    currency = forms.ChoiceField(choices=[('GBP', 'GBP'), ('ZAR', 'ZAR')])
+    receiver_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Receiver Name',        
+    }))
+    receiver_email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Receiver Email',
+        'min': '10'
+    }))
+    amount = forms.DecimalField(min_value=10, max_value=10000, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter Amount',
+        'min': '10'
+    }))
+    currency = forms.ChoiceField(choices=[('GBP', 'GBP'), ('ZAR', 'ZAR')], widget=forms.Select(attrs={
+        'class': 'form-control'        
+    }))
