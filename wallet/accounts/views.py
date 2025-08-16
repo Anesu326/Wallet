@@ -11,6 +11,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from .utils import get_fx_rates
 from django.utils import timezone
 
+#Registration view
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -24,7 +25,8 @@ def register_view(request):
     else:
         form = RegisterForm()
         return render(request, 'accounts/register.html', {'form':form})
-        
+
+#Login view
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -37,10 +39,12 @@ def login_view(request):
             return render(request, 'accounts/login.html', {'error':'Invalid credentials.'})
     return render(request, 'accounts/login.html')
 
+# Logout view
 def logout_view(request):
     logout(request)
     return redirect('login')
 
+#Dashboard view
 @login_required
 def dashboard_view(request):
     user = request.user
@@ -117,6 +121,7 @@ def dashboard_view(request):
                 
     # return render(request, 'accounts/dashboard.html', {'form':form, 'result':result, 'page_obj':page_obj,})
 
+#Transaction History view
 @login_required
 def transaction_history_view(request):
     transactions = Transaction.objects.filter(user=request.user).order_by('-timestamp')
