@@ -47,29 +47,31 @@
         <div class="col-md-6">
           <div class="card p-4 mb-4">
             <h4>Send Money</h4>
-            <form method="post" id="sendForm">
+            <form method="post">
               {% csrf_token %}
-              <div class="mb1">
+              {{ form.non_field_erros }}
+              <div class="mb3">
                 <label>Receiver Name</label>
-                <input type="text" name="receiver_name" class="form-control" required>
+                {{ form.receiver_name }}
+                {{ form.receiver_name.errors }}
               </div>
               <div class="mb3">
                 <label>Receiver Email</label>
-                <input type="text" name="receiver_email" class="form-control" required>
+                 {{ form.receiver_email }}
+                 {{ form.receiver_email.errors }}
               </div>
               <div class="mb3">
                 <label>Amount (USD)</label>
-                <input type="number" name="amount" class="form-control" min="10" required>
+                {{ form.amount }}
+                {{ form.amount.errors }}
               </div>
               <div class="mb3">
                 <label>Currency</label>
-                <select name="currency" class="form-control" required>
-                  <option value="GBP">GBP</option>
-                  <option value="ZAR">ZAR</option>
-                </select>
+                {{ form.currency }}
+                {{ form.currency.errors }}
               </div>
               <div class="mb3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Send</button>
+                <button type="button" class="btn btn-primary" onclick="openConfirmModal()">Send</button>
               </div>
             <div class="modal fade" id="confirmModal" tabindex="-1">
               <div class="modal-dialog">
@@ -208,6 +210,19 @@
           document.getElementById('confirmReceiver').textContent = document.querySelector('input[name="receiver_name"]').value;
           document.getElementById('confirmEmail').textContent = document.querySelector('input[name="receiver_email"]').value;
         });
+        function openConfirmModal(){
+          const form = document.querySelector('form');
+          if (form.checkValidity()){
+            document.getElementById('confirmAmount').textContent = form.amount.value;
+            document.getElementById('confirmCurrency').textContent = form.currency.value;
+            document.getElementById('confirmReceiver').textContent = form.receiver_name.value;
+            document.getElementById('confirmEmail').textContent = form.receiver_email.value;
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+          }else{
+            form.reportValidity();
+          }
+        }
       </script>
 
       {% if result %}

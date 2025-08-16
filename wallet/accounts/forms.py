@@ -15,11 +15,11 @@ class LoginForm(AuthenticationForm):
 class SendMoneyForm(forms.Form):
     receiver_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Receiver Name',        
+        'placeholder': 'Name',        
     }))
     receiver_email = forms.CharField(widget=forms.EmailInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Receiver Email',
+        'placeholder': 'Email',
         'min': '10'
     }))
     amount = forms.DecimalField(min_value=10, max_value=10000, widget=forms.NumberInput(attrs={

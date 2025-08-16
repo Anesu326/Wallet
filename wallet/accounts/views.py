@@ -51,6 +51,9 @@ def dashboard_view(request):
     paginator = Paginator(transactions, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    result = None
+    form = SendMoneyForm()
+
     if request.method == 'POST':
         form = SendMoneyForm(request.POST)
         if form.is_valid():
@@ -84,6 +87,7 @@ def dashboard_view(request):
                 'currency':currency,
                 'timestamp': transaction.timestamp,
             }
+            
         else:
             result = None
         context = {
@@ -96,13 +100,17 @@ def dashboard_view(request):
                 'currency': currency,
                 'rate': fx_rates,
                 'timestamp': timezone.now(),
+                
             },
+            
             'page_obj': page_obj,
             'transactions': transactions,
         }
+        form = SendMoneyForm()
         return render(request, 'accounts/dashboard.html', context)
     return render(request, 'accounts/dashboard.html',{
-        'page_obj':page_obj        
+        'page_obj':page_obj,
+        'form': form       
     })
             
     # else:
